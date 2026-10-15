@@ -2,207 +2,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tesl.Space X Investment | Demo</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      color: #172033;
-    }
-    header {
-      background: #101a30;
-      color: white;
-      padding: 22px 18px;
-    }
-    header h1 { margin: 0 0 8px; font-size: 23px; }
-    header p { margin: 0; color: #bdc9df; font-size: 13px; }
-    .notice {
-      background: #fff3cd;
-      color: #755600;
-      padding: 12px 16px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    main { max-width: 900px; margin: auto; padding: 18px; }
-    .welcome { margin-bottom: 20px; }
-    .welcome h2 { margin-bottom: 6px; }
-    .muted { color: #647087; font-size: 14px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 12px;
-    }
-    .card {
-      background: white;
-      border: 1px solid #e1e7f0;
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-    .amount { font-size: 25px; font-weight: bold; margin-top: 12px; }
-    .green { color: #16805d; }
-    h3 { margin-top: 0; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td {
-      padding: 12px 7px;
-      text-align: left;
-      border-bottom: 1px solid #e8edf4;
-      font-size: 13px;
-    }
-    th { color: #647087; }
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 16px;
-      background: #245de8;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button.secondary { background: #e8eefb; color: #2148a0; }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccd5e3;
-      border-radius: 8px;
-      margin: 7px 0 14px;
-      background: white;
-    }
-    .qr {
-      width: 130px;
-      height: 130px;
-      border: 2px dashed #9ba8bd;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      margin: 12px auto;
-      color: #647087;
-      padding: 12px;
-      font-size: 12px;
-    }
-    footer { text-align: center; padding: 25px; color: #647087; font-size: 12px; }
-    @media (max-width: 480px) {
-      main { padding: 12px; }
-      .amount { font-size: 22px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tesl.Space X Investment — Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6fb;color:#172033;font-family:Arial,sans-serif}
+header{background:#101a30;color:white;padding:22px}
+header h1{font-size:22px;margin:0 0 7px}
+header p{margin:0;color:#c1cce0;font-size:13px}
+.notice{background:#fff0c2;color:#674c00;padding:13px 18px;font-size:13px;line-height:1.5}
+main{max-width:850px;margin:auto;padding:18px}
+.card{background:white;border:1px solid #e1e7f0;border-radius:14px;padding:20px;margin-bottom:16px}
+h2,h3{margin-top:0}
+label{display:block;font-size:14px;margin:12px 0 6px}
+input{width:100%;padding:13px;border:1px solid #ccd5e3;border-radius:8px;font-size:16px}
+button{background:#245de8;color:white;border:0;padding:13px 16px;border-radius:9px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+button.secondary{background:#e8eefb;color:#2148a0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.muted{color:#647087;font-size:14px;line-height:1.5}
+.amount{font-size:27px;font-weight:bold;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.hidden{display:none!important}
+.message{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+footer{text-align:center;color:#647087;font-size:12px;padding:22px}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Tesl.Space X Investment</h1>
-    <p>Investment dashboard prototype</p>
-  </header>
+<header>
+<h1>Tesl.Space X Investment</h1>
+<p>Customer investment dashboard prototype</p>
+</header>
 
-  <div class="notice">
-    DEMO MODE — All balances, prices and transactions are simulated.
-    No real shares are held and no real deposits are accepted.
-    This is an independent prototype, not an official Tesla or SpaceX service.
-  </div>
+<div class="notice">
+DEMO ONLY: No real shares are held and no real deposits or withdrawals
+are accepted. This is an independent prototype, not an official Tesla
+or SpaceX service.
+</div>
 
-  <main>
-    <section class="welcome">
-      <h2>Welcome to your portfolio</h2>
-      <p class="muted">Explore how your investment dashboard could work.</p>
-    </section>
+<main>
+<section id="auth" class="card">
+<h2>Welcome</h2>
+<p class="muted">Create a demo account or sign in to view your portfolio.</p>
 
-    <section class="grid">
-      <div class="card">
-        <div class="muted">Demo balance</div>
-        <div class="amount" id="balance">$10,000.00</div>
-      </div>
-      <div class="card">
-        <div class="muted">Demo portfolio value</div>
-        <div class="amount">$4,250.00</div>
-      </div>
-      <div class="card">
-        <div class="muted">Demo return</div>
-        <div class="amount green">+$250.00</div>
-        <div class="muted">Illustrative only</div>
-      </div>
-    </section>
+<label for="name">Full name (for registration)</label>
+<input id="name" autocomplete="name" placeholder="Your full name">
 
-    <section class="card">
-      <h3>Sample stock portfolio</h3>
-      <p class="muted">Illustrative values, not live prices or real holdings.</p>
-      <table>
-        <thead>
-          <tr><th>Asset</th><th>Demo shares</th><th>Demo value</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Example Stock A</td><td>5</td><td>$1,500.00</td></tr>
-          <tr><td>Example Stock B</td><td>10</td><td>$1,250.00</td></tr>
-          <tr><td>Example Stock C</td><td>15</td><td>$1,500.00</td></tr>
-        </tbody>
-      </table>
-    </section>
+<label for="email">Email address</label>
+<input id="email" type="email" autocomplete="email" placeholder="you@example.com">
 
-    <section class="card">
-      <h3>Try a demo deposit</h3>
-      <p class="muted">This only changes the sample balance in this page. It does not send cryptocurrency.</p>
-      <label for="deposit">Demo amount (USD)</label>
-      <input id="deposit" type="number" min="1" max="100000" placeholder="Enter an amount">
-      <button onclick="demoDeposit()">Simulate deposit</button>
-      <p id="message" class="muted" aria-live="polite"></p>
-    </section>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password"
+placeholder="At least 8 characters">
 
-    <section class="card">
-      <h3>Crypto deposit preview</h3>
-      <p class="muted">A future version may support approved payment providers after legal and security checks.</p>
-      <label for="network">Example network</label>
-      <select id="network">
-        <option>Test mode only — no real network</option>
-      </select>
-      <div class="qr">DEMO ONLY<br>No real QR code</div>
-      <p class="muted">No wallet address is provided and no funds should be sent.</p>
-    </section>
+<div class="actions">
+<button id="register">Create account</button>
+<button id="login" class="secondary">Sign in</button>
+</div>
+<p id="authMessage" class="message" aria-live="polite"></p>
+</section>
 
-    <section class="card">
-      <h3>Recent activity</h3>
-      <p class="muted" id="activity">Demo account created · Sample transaction history</p>
-      <button class="secondary" onclick="resetDemo()">Reset demo balance</button>
-    </section>
-  </main>
+<section id="dashboard" class="hidden">
+<div class="card">
+<h2>Your dashboard</h2>
+<p id="welcome" class="muted">Loading your account...</p>
+<div class="grid">
+<div class="card">
+<p class="muted">Simulated cash balance</p>
+<div id="balance" class="amount">$—</div>
+</div>
+<div class="card">
+<p class="muted">Real investments</p>
+<div class="amount">$0.00</div>
+<p class="muted">No real shares are held by this demo.</p>
+</div>
+</div>
+<p class="muted">Your demo balance is not money and cannot be withdrawn.</p>
+<button id="refresh" class="secondary">Refresh dashboard</button>
+<button id="logout">Sign out</button>
+<p id="dashboardMessage" class="message" aria-live="polite"></p>
+</div>
 
-  <footer>
-    Independent demonstration only · Not financial advice · No real-money transactions
-  </footer>
+<div class="card">
+<h3>Sample portfolio</h3>
+<p class="muted">Illustrative assets only. No live prices or real holdings.</p>
+<p>Example Stock A — $1,500 simulated value</p>
+<p>Example Stock B — $1,250 simulated value</p>
+<p>Example Stock C — $1,500 simulated value</p>
+</div>
 
-  <script>
-    let balance = 10000;
+<div class="card">
+<h3>Deposit preview</h3>
+<p class="muted">Crypto payments are not enabled. Do not send funds to this prototype.</p>
+<button class="secondary" id="depositInfo">View deposit information</button>
+<p id="depositMessage" class="message" aria-live="polite"></p>
+</div>
 
-    function demoDeposit() {
-      const field = document.getElementById("deposit");
-      const message = document.getElementById("message");
-      const amount = Number(field.value);
+<div class="card">
+<h3>Recent demo transactions</h3>
+<div id="transactions" class="muted">Loading transactions...</div>
+</div>
+</section>
+</main>
 
-      if (!Number.isFinite(amount) || amount <= 0 || amount > 100000) {
-        message.textContent = "Enter a demo amount greater than $0 and no more than $100,000.";
-        return;
-      }
+<footer>
+Independent demo prototype · No real-money services · Not financial advice
+</footer>
 
-      balance += amount;
+<script>
+(() => {
+  const SUPABASE_URL = "https://oxpmjdykqkcrxysdmpmi.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_8WjWI7xMIEIDEyK7DB4ABw_x658wuOQ";
+
+  const authPanel = document.getElementById("auth");
+  const dashboard = document.getElementById("dashboard");
+  const authMessage = document.getElementById("authMessage");
+  const dashboardMessage = document.getElementById("dashboardMessage");
+
+  if (!window.supabase) {
+    authMessage.textContent = "The login library did not load. Check your internet connection and reload.";
+    return;
+  }
+
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const money = value => "$" + Number(value).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  function setMessage(element, message) {
+    element.textContent = message;
+  }
+
+  async function loadDashboard(user) {
+    authPanel.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    document.getElementById("welcome").textContent =
+      "Signed in as " + (user.email || "customer");
+
+    document.getElementById("balance").textContent = "Loading...";
+    document.getElementById("transactions").textContent = "Loading...";
+    setMessage(dashboardMessage, "");
+
+    const { data: portfolio, error: portfolioError } = await client
+      .from("demo_portfolios")
+      .select("demo_balance")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (portfolioError) {
+      document.getElementById("balance").textContent = "Unavailable";
+      setMessage(dashboardMessage,
+        "Could not load your demo portfolio. Check your database policies.");
+    } else if (portfolio) {
       document.getElementById("balance").textContent =
-        "$" + balance.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      message.textContent = "Demo deposit simulated. No real money was received.";
-      document.getElementById("activity").textContent =
-        "Simulated deposit: $" + amount.toFixed(2) + " · No real transaction";
-      field.value = "";
+        money(portfolio.demo_balance);
+    } else {
+      document.getElementById("balance").textContent = "Not created";
+      setMessage(dashboardMessage,
+        "No demo portfolio was found for this account. Contact the site administrator.");
     }
 
-    function resetDemo() {
-      balance = 10000;
-      document.getElementById("balance").textContent = "$10,000.00";
-      document.getElementById("message").textContent = "Demo balance reset.";
-      document.getElementById("activity").textContent =
-        "Demo account reset · No real transactions";
+    const { data: transactions, error: transactionError } = await client
+      .from("demo_transactions")
+      .select("transaction_type, amount, status, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    const list = document.getElementById("transactions");
+    list.replaceChildren();
+
+    if (transactionError) {
+      list.textContent = "Transaction history could not be loaded.";
+    } else if (!transactions || transactions.length === 0) {
+      list.textContent = "No demo transactions yet.";
+    } else {
+      transactions.forEach(item => {
+        const row = document.createElement("p");
+        row.textContent = item.transaction_type.replaceAll("_", " ") +
+          " · " + money(item.amount) + " · " + item.status;
+        list.appendChild(row);
+      });
     }
-  </script>
+  }
+
+  async function checkSession() {
+    const { data, error } = await client.auth.getSession();
+    if (error) {
+      setMessage(authMessage, "Unable to check your session. Please reload.");
+      return;
+    }
+    if (data.session) await loadDashboard(data.session.user);
+    else {
+      dashboard.classList.add("hidden");
+      authPanel.classList.remove("hidden");
+    }
+  }
+
+  document.getElementById("register").addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!name || !email || password.length < 8) {
+      setMessage(authMessage,
+        "Enter your name, a valid email, and a password of at least 8 characters.");
+      return;
+    }
+
+    const button = document.getElementById("register");
+    button.disabled = true;
+    setMessage(authMessage, "Creating your demo account...");
+
+    try {
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { display_name: name }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        await loadDashboard(data.session.user);
+        setMessage(dashboardMessage, "Demo account created successfully.");
+      } else {
+        setMessage(authMessage,
+          "Registration submitted. Check your email for the confirmation link, then return here and sign in.");
+      }
+    } catch (error) {
+      setMessage(authMessage, error.message || "Registration failed.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  document.getElementById("login").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      setMessage(authMessage, "Enter your email and password.");
+      return;
+    }
+
+    const button = document.getElementById("login");
+    button.disabled = true;
+    setMessage(authMessage, "Signing in...");
+
+    try {
+      const { data, error } = await client.auth.signInWithPassword({
+        email, password
+      });
+
+      if (error) throw error;
+      await loadDashboard(data.user);
+    } catch (error) {
+      setMessage(authMessage, error.message || "Sign-in failed.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  document.getElementById("refresh").addEventListener("click", async () => {
+    const { data } = await client.auth.getUser();
+    if (data.user) await loadDashboard(data.user);
+  });
+
+  document.getElementById("logout").addEventListener("click", async () => {
+    const { error } = await client.auth.signOut();
+    if (error) {
+      setMessage(dashboardMessage, "Sign-out failed. Please try again.");
+      return;
+    }
+    dashboard.classList.add("hidden");
+    authPanel.classList.remove("hidden");
+    document.getElementById("password").value = "";
+    setMessage(authMessage, "You have signed out.");
+  });
+
+  document.getElementById("depositInfo").addEventListener("click", () => {
+    setMessage(document.getElementById("depositMessage"),
+      "Crypto deposits are not enabled. No wallet address is available. Do not send money.");
+  });
+
+  client.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") {
+      dashboard.classList.add("hidden");
+      authPanel.classList.remove("hidden");
+    }
+  });
+
+  checkSession();
+})();
+</script>
 </body>
-  </html>
+</html>
